@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
 import { QuizSetup, Question } from './models/quiz.interface';
+import * as JSON5 from 'json5';
 
 @Injectable({
   providedIn: 'root',
@@ -102,7 +103,7 @@ export class QuizService {
       console.log(jsonStr);
 
       // Parse the JSON
-      const parsedQuestions = JSON.parse(jsonStr);
+      const parsedQuestions = JSON5.parse(jsonStr);
 
       console.log(parsedQuestions);
 
