@@ -1,0 +1,19 @@
+.setup-card {
+  margin: 1rem;
+}
+
+.topics-section,
+.question-type-section {
+  margin: 1.5rem 0;
+}
+
+.topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}

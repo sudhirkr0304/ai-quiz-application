@@ -1,0 +1,38 @@
+<mat-card class="quiz-card" *ngIf="currentQuestion">
+  <mat-card-header>
+    <mat-card-title
+      >Question {{ currentQuestionIndex + 1 }} of
+      {{ questions.length }}</mat-card-title
+    >
+  </mat-card-header>
+
+  <mat-progress-bar
+    mode="determinate"
+    [value]="(currentQuestionIndex / questions.length) * 100"
+  >
+  </mat-progress-bar>
+
+  <mat-card-content>
+    <p class="question-text">{{ currentQuestion.question }}</p>
+
+    <mat-radio-group class="options-group" [(ngModel)]="selectedOption">
+      <mat-radio-button
+        *ngFor="let option of currentQuestion.options; let i = index"
+        [value]="i"
+      >
+        {{ option }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="nextQuestion()"
+      [disabled]="selectedOption === null"
+    >
+      {{ isLastQuestion ? "Finish" : "Next" }}
+    </button>
+  </mat-card-actions>
+</mat-card>

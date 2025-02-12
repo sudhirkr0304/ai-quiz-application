@@ -1,0 +1,27 @@
+<mat-card class="result-card">
+  <mat-card-header>
+    <mat-card-title>Quiz Results</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="score-container">
+      <div class="score-circle">
+        <div class="score-number">{{ percentage }}%</div>
+        <div class="score-text">Score</div>
+      </div>
+
+      <div class="score-details">
+        <p>
+          You scored {{ score }} out of {{ totalQuestions }} questions
+          correctly.
+        </p>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="restartQuiz()">
+      <mat-icon>replay</mat-icon> Take Another Quiz
+    </button>
+  </mat-card-actions>
+</mat-card>
