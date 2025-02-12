@@ -10,7 +10,7 @@
       <div class="topic-list">
         <mat-form-field
           appearance="outline"
-          *ngFor="let topic of topics; let i = index"
+          *ngFor="let topic of topics; let i = index; trackBy: trackByIndex"
         >
           <mat-label>Topic {{ i + 1 }}</mat-label>
           <input matInput [(ngModel)]="topics[i]" placeholder="Enter topic" />

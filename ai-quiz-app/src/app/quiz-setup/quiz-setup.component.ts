@@ -26,11 +26,15 @@ export class QuizSetupComponent {
   }
 
   removeTopic(index: number) {
-    this.topics = this.topics.filter((_, i) => i !== index);
+    this.topics.splice(index, 1);
   }
 
   isValid(): boolean {
     return this.topics.some((topic) => topic.trim() !== '');
+  }
+
+  trackByIndex(index: number, item: any): number {
+    return index;
   }
 
   async startQuiz() {
