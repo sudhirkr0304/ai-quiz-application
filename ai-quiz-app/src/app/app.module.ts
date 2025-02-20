@@ -16,6 +16,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -49,6 +51,8 @@ import { ResultComponent } from './result/result.component';
     MatSnackBarModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatDividerModule,
+    MatExpansionModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

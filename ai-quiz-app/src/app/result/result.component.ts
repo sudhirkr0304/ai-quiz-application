@@ -8,18 +8,15 @@ import { QuizService } from '../quiz.service';
   styleUrls: ['./result.component.css'],
 })
 export class ResultComponent implements OnInit {
-  score: number = 0;
-  totalQuestions: number = 0;
+  result = this.quizService.getQuizResult();
+  percentage = (this.result.score / this.result.totalQuestions) * 100;
 
   constructor(private quizService: QuizService, private router: Router) {}
 
   ngOnInit() {
-    this.score = this.quizService.getScore();
-    this.totalQuestions = this.quizService.getQuestions().length;
-  }
-
-  get percentage(): number {
-    return Math.round((this.score / this.totalQuestions) * 100);
+    if (this.result.totalQuestions === 0) {
+      this.router.navigate(['/']);
+    }
   }
 
   restartQuiz() {

@@ -17,3 +17,25 @@
 mat-radio-button {
   margin: 0.5rem 0;
 }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-right: 16px;
+}
+
+.timer {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #666;
+  white-space: nowrap;
+  margin-left: 16px;
+  margin-right: 20px;
+}
+
+mat-card-title {
+  margin-right: 16px;
+  flex-shrink: 1;
+}

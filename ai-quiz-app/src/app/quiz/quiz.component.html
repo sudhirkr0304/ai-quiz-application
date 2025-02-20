@@ -1,9 +1,13 @@
 <mat-card class="quiz-card" *ngIf="currentQuestion">
-  <mat-card-header>
-    <mat-card-title
-      >Question {{ currentQuestionIndex + 1 }} of
-      {{ questions.length }}</mat-card-title
-    >
+  <mat-card-header class="card-header">
+    <mat-card-title>
+      Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}
+    </mat-card-title>
+    <div class="timer">
+      Time Remaining: {{ timer.minutes }}:{{
+        timer.seconds < 10 ? "0" + timer.seconds : timer.seconds
+      }}
+    </div>
   </mat-card-header>
 
   <mat-progress-bar

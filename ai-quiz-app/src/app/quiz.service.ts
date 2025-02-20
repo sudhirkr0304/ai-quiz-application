@@ -6,6 +6,17 @@ import { Observable, from } from 'rxjs';
 import { QuizSetup, Question } from './models/quiz.interface';
 import * as JSON5 from 'json5';
 
+interface QuizResult {
+  score: number;
+  totalQuestions: number;
+  answers: {
+    question: string;
+    userAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+  }[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -16,6 +27,17 @@ export class QuizService {
     'https://models.aixplain.com/api/v1/execute/671b8feb6eb563607a679e51';
   private questions: Question[] = [];
   private currentScore: number = 0;
+  private quizResult: QuizResult = {
+    score: 0,
+    totalQuestions: 0,
+    answers: [],
+  };
+  private answers: {
+    question: string;
+    userAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+  }[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -145,5 +167,42 @@ export class QuizService {
 
   getScore(): number {
     return this.currentScore;
+  }
+
+  setQuizResult(
+    score: number,
+    answers: {
+      question: string;
+      userAnswer: string;
+      correctAnswer: string;
+      isCorrect: boolean;
+    }[]
+  ) {
+    this.quizResult = {
+      score,
+      totalQuestions: this.questions.length,
+      answers,
+    };
+  }
+
+  getQuizResult(): QuizResult {
+    return this.quizResult;
+  }
+
+  getAnswers() {
+    return this.answers;
+  }
+
+  clearAnswers() {
+    this.answers = [];
+  }
+
+  addAnswer(answer: {
+    question: string;
+    userAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+  }) {
+    this.answers.push(answer);
   }
 }

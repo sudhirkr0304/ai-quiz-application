@@ -1,6 +1,7 @@
 .result-card {
-  margin: 1rem;
-  text-align: center;
+  margin: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
 }
 
 .score-container {
@@ -32,4 +33,42 @@
 .score-details {
   font-size: 1.2rem;
   color: rgba(0, 0, 0, 0.87);
+}
+
+.score-summary {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.detailed-analysis {
+  margin-top: 2rem;
+}
+
+.correct {
+  color: #4caf50;
+}
+
+.wrong {
+  color: #f44336;
+}
+
+.wrong-answer {
+  color: #f44336;
+}
+
+.correct-answer {
+  color: #4caf50;
+  margin-top: 0.5rem;
+}
+
+mat-expansion-panel {
+  margin-bottom: 1rem;
+}
+
+mat-icon {
+  margin-left: 1rem;
+}
+
+mat-divider {
+  margin: 2rem 0;
 }
