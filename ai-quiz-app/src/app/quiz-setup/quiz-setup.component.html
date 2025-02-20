@@ -1,12 +1,11 @@
 <mat-card class="setup-card">
   <mat-card-header>
-    <mat-card-title>Quiz Setup</mat-card-title>
-    <mat-card-subtitle>Configure your quiz settings</mat-card-subtitle>
+    <mat-card-title>AI Quiz</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
     <div class="topics-section">
-      <h3>Topics</h3>
+      <h3>Topics (Subject/Charpter/Topic) Name</h3>
       <div class="topic-list">
         <mat-form-field
           appearance="outline"
@@ -38,6 +37,18 @@
           <mat-option value="theoretical">Theoretical</mat-option>
           <mat-option value="numerical">Numerical</mat-option>
           <mat-option value="both">Both</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="question-type-section">
+      <h3>Question Level</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Select Level</mat-label>
+        <mat-select [(ngModel)]="selectedLevel">
+          <mat-option value="easy">Easy</mat-option>
+          <mat-option value="medium">Medium</mat-option>
+          <mat-option value="hard">Hard</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

@@ -30,9 +30,10 @@ export class QuizService {
   private createPrompt(setup: QuizSetup): string {
     const topics = setup.topics.join(', ');
     const questionType = setup.questionType;
+    const questionLevel = setup.questionLevel;
 
     return `Generate multiple choice questions about ${topics}.
-    Question type should be ${questionType} for CUET Exam class 12th cbse.
+    Question type should be ${questionType} of level ${setup.questionLevel}for CUET Exam class 12th cbse.
     must format the response as a JSON array where each question object has the following structure:
     {
       "question": "the question text",

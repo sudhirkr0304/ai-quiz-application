@@ -14,6 +14,7 @@ export class QuizSetupComponent {
   topics: string[] = [''];
   selectedType: 'theoretical' | 'numerical' | 'both' = 'both';
   isLoading = false;
+  selectedLevel: 'easy' | 'medium' | 'hard' = 'easy';
 
   constructor(
     private quizService: QuizService,
@@ -44,6 +45,7 @@ export class QuizSetupComponent {
     const setup = {
       topics: this.topics.filter((topic) => topic.trim() !== ''),
       questionType: this.selectedType,
+      questionLevel: this.selectedLevel,
     };
 
     try {
