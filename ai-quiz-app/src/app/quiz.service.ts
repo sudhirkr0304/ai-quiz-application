@@ -64,26 +64,31 @@ export class QuizService {
     }`;
   }
 
-  private async fetchQuestions(prompt: string): Promise<Question[]> {
-    try {
-      // Initial POST request
-      const postResponse = await fetch(this.POST_URL, {
-        method: 'POST',
-        headers: {
-          'x-api-key': this.AIXPLAIN_API_KEY,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: prompt,
-        }),
-      });
+  private async fetchQuestions(
+    prompt: string,
+    maxRetries = 3
+  ): Promise<Question[]> {
+    let lastError: Error | null = null;
 
-      const postResult = await postResponse.json();
-      const requestId = postResult.requestId;
-      const getUrl = `https://models.aixplain.com/api/v1/data/${requestId}`;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // Initial POST request
+        const postResponse = await fetch(this.POST_URL, {
+          method: 'POST',
+          headers: {
+            'x-api-key': this.AIXPLAIN_API_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: prompt,
+          }),
+        });
 
-      // Polling for results
-      while (true) {
+        const postResult = await postResponse.json();
+        const requestId = postResult.requestId;
+        const getUrl = `https://models.aixplain.com/api/v1/data/${requestId}`;
+
+        // Polling for results
         const getResponse = await fetch(getUrl, {
           method: 'GET',
           headers: {
@@ -97,59 +102,86 @@ export class QuizService {
         console.log(result);
 
         if (result.completed) {
-          // Parse the AI response into our Question format
           try {
             const questions = this.parseAIResponse(result.data);
-            console.log(questions);
-            this.questions = questions;
-            return questions;
+            if (questions.length > 0) {
+              this.questions = questions;
+              return questions;
+            }
           } catch (error) {
-            console.error('Error parsing AI response:', error);
-            throw new Error('Failed to parse questions from AI response');
+            console.error(`Attempt ${attempt}: Invalid response format`);
+            lastError = error as Error;
+            if (attempt === maxRetries) throw error;
+            continue;
           }
         }
 
         // Wait for 5 seconds before next poll
         await new Promise((resolve) => setTimeout(resolve, 5000));
+      } catch (error) {
+        lastError = error as Error;
+        if (attempt === maxRetries) throw error;
+        await new Promise((resolve) => setTimeout(resolve, 2000 * attempt)); // Exponential backoff
       }
-    } catch (error) {
-      console.error('Error generating questions:', error);
-      throw new Error('Failed to generate questions');
     }
+
+    throw (
+      lastError ||
+      new Error('Failed to generate valid questions after multiple attempts')
+    );
   }
 
   private parseAIResponse(aiOutput: string): Question[] {
     try {
-      // Extract JSON using the correct regex pattern
+      // Extract JSON between ```json and ``` markers
       const jsonMatch = aiOutput.match(/```json\s*([\s\S]*?)\s*```/);
-      const jsonStr = jsonMatch ? jsonMatch[1] : aiOutput; // Extract JSON part
-      console.log(jsonStr);
+      let jsonStr = jsonMatch ? jsonMatch[1] : aiOutput;
 
-      // Parse the JSON
-      const parsedQuestions = JSON5.parse(jsonStr);
+      // Clean up any remaining text before/after the JSON array
+      const arrayMatch = jsonStr.match(/\[\s*{[\s\S]*?}\s*\]/);
+      if (!arrayMatch) {
+        throw new Error('No valid JSON array found in response');
+      }
+      jsonStr = arrayMatch[0];
 
-      console.log(parsedQuestions);
+      // Parse and validate
+      let parsedQuestions = JSON5.parse(jsonStr);
+      if (!Array.isArray(parsedQuestions)) {
+        throw new Error('Response is not an array');
+      }
 
       // Validate and format each question
-      return parsedQuestions.map((q: any) => {
-        if (
-          !q.question ||
-          !Array.isArray(q.options) ||
-          q.options.length < 2 || // Ensuring at least 2 options exist
-          typeof q.answer !== 'number'
-        ) {
-          throw new Error('Invalid question format');
-        }
+      return parsedQuestions
+        .filter((q): q is NonNullable<typeof q> => q && typeof q === 'object')
+        .map((q: any): Question | null => {
+          // Ensure all required fields exist and are valid
+          if (
+            !q.question ||
+            !Array.isArray(q.options) ||
+            typeof q.answer !== 'number'
+          ) {
+            return null;
+          }
 
-        return {
-          question: q.question,
-          options: q.options,
-          answer: q.answer,
-        };
-      });
+          // Ensure we have exactly 4 options
+          const options = q.options.map(String).filter(Boolean).slice(0, 4);
+          if (options.length !== 4) {
+            return null;
+          }
+
+          return {
+            question: String(q.question).trim(),
+            options: options,
+            answer: Math.min(Math.max(0, q.answer), 3), // Ensure answer is between 0-3
+          };
+        })
+        .filter((q): q is Question => q !== null); // Type predicate to filter out nulls
     } catch (error) {
       console.error('Error parsing AI response:', error);
-      throw new Error('Failed to parse AI response');
+      console.error('Original AI output:', aiOutput);
+      throw new Error(
+        'Failed to parse questions from AI response. Please try again.'
+      );
     }
   }
 
