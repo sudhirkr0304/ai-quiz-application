@@ -55,7 +55,8 @@ export class QuizService {
     const questionLevel = setup.questionLevel;
 
     return `Generate multiple choice questions about ${topics}.
-    Question type should be ${questionType} of level ${setup.questionLevel}for CUET Exam class 12th cbse.
+    Question type should be ${questionType} of level ${setup.questionLevel}for CUET Exam class 12th cbse mock questions.
+    cuet ug mock test for class 12th cbse students.
     must format the response as a JSON array where each question object has the following structure:
     {
       "question": "the question text",
